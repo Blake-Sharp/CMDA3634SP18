@@ -1,25 +1,24 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
 
 //the recursive gcd function
 
-int gcd(int first, int second){
+int gcd(int a, int b){
 
 
 	//checks for sneaky cases
-	if (first == 0 || second == 0)
+	if (a == 0 || b == 0)
 		return 0;
 	
 	// base case for the recursive function
-	if (first == second)
-		return first;
+	if (a == b)
+		return a;
 
 	// homework said to assume a >= b
-	if (first > second)
-		return gcd(first-second, second);
-	return gcd(first, second-first);
+	if (a > b)
+		return gcd(a-b, a);
+	return gcd(a, b-a);
 }
 
 
