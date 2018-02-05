@@ -32,7 +32,7 @@ for(int j = 2; j < p; j++){
 	if (gen == 0)
 		printf("%d has no generator.\n", p);
 	if (gen != 0)
-		printf("%d is a generator.\n", gen);
+		printf("%d is a generator of Z_%d.\n", gen, p);
 
 
 }
