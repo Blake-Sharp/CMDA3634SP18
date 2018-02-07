@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//Similar issues with the size of an int I am able to use. Computational load seems to function
+//normally despite the large numbers giving the wrong (but calculatable) solution. The int range
+//is the problem, not the math of the program. 
+
+
 // gcd code again to be used in determining if a number is coprime or not
 // there has to be a better way than writing this over and over
 int gcd(int a, int b){

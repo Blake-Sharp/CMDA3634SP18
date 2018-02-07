@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
+//This program seems to give issues at much smaller numbers, giving the least common multiple to be negative quite readily. I believe this is because of line 23 being the product of the two numbers becoming too large too quickly. 
 
 //gcd code to be used in lcm
 int gcd(int a, int b){

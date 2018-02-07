@@ -2,6 +2,11 @@
 #include <stdio.h>
 
 
+//This issue with computational load seems to be fine, yet when using integers larger
+//than the available integer range of C (-2,147,483,648 to 2,147,483,647) the function fails
+//to work properly. The int seems to have wraparound logic, so if I choose a number too large,
+//it moves to the negative side by the amount over this max number.
+
 //the recursive gcd function
 
 int gcd(int a, int b){
