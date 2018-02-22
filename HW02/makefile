@@ -12,7 +12,7 @@ DEPS = $(INCLUDES)
 FLAGS = -I$(INCLUDEDIR) -O3 -g
 LIBS  = -lm
 
-CC =  mpicc 
+CC =  gcc
 
 $(OBJDIR)/%.o:$(SOURCEDIR)/%.c $(DEPS)
 	$(CC) $(FLAGS) -o $@ $(LIBS) -c $<
