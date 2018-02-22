@@ -6,12 +6,29 @@
 
 //compute a*b mod p safely
 unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
-  /* Q1.2: Complete this function */
+	unsigned int za = a;
+	unsigned int ab = 0;
+	
+	while (b>0){ //couldn't figure out indexing, but this works as well
+		if((b%2) ==1){
+			ab = (ab+za*b%2)%p;
+		}
+		za = 2*za %p;
+	}
+	 return ab;
 }
 
 //compute a^b mod p safely
 unsigned int modExp(unsigned int a, unsigned int b, unsigned int p) {
-  /* Q1.3: Complete this function */
+ 	unsigned int z = a;
+	aExpb = 1;
+	while(b>0){
+		if((b%2) ==1){
+		aExpb = modProd(aExpb,z,p);
+		}
+	z = modProd(z,z,p);
+	}
+	return aExpb;
 }
 
 //returns either 0 or 1 randomly
@@ -63,11 +80,30 @@ unsigned int isProbablyPrime(unsigned int N) {
   }
 
   //if we're testing a large number switch to Miller-Rabin primality test
-  /* Q2.1: Complete this part of the isProbablyPrime function using the Miller-Rabin pseudo-code */
-  unsigned int r,d;
-
-  for (unsigned int n=0;n<NsmallPrimes;n++) {
   
+  unsigned int r = 0;
+  unsigned int d = 1;
+  unsigned int tempN = N-1;
+
+	//figuring out d and r
+	while (d = 1){
+	if((tempN)%2 == 0){
+		r++;
+		tempN = tempN/2;
+	}
+	else d = (tempN-1)%2;
+	}
+
+	//Miller-Rabin test
+  for (unsigned int n=0;n<NsmallPrimes;n++) {
+	unsigned int x = modExp(a,d,N);
+	if ((x == 1) || (x == N-1)) continue;
+	for (int i = 1; i < r-1; i++){
+		x = modProd(x,x,N);
+		if (x==1) return 0; //false
+		if (x==N-1) break;
+	}
+	//return 0; //false
   }
   return 1; //true
 }
