@@ -5,7 +5,7 @@
 #include "functions.h"
 
 //compute a*b mod p safely
-unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
+unsigned int modProd(unsigned int a, unsigned int b, unsigned int p) {
 	unsigned int za = a;
 	unsigned int ab = 0;
 	
@@ -21,7 +21,7 @@ unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
 //compute a^b mod p safely
 unsigned int modExp(unsigned int a, unsigned int b, unsigned int p) {
  	unsigned int z = a;
-	aExpb = 1;
+	unsigned int aExpb = 1;
 	while(b>0){
 		if((b%2) ==1){
 		aExpb = modProd(aExpb,z,p);
@@ -96,7 +96,7 @@ unsigned int isProbablyPrime(unsigned int N) {
 
 	//Miller-Rabin test
   for (unsigned int n=0;n<NsmallPrimes;n++) {
-	unsigned int x = modExp(a,d,N);
+	unsigned int x = modExp(r,d,N);
 	if ((x == 1) || (x == N-1)) continue;
 	for (int i = 1; i < r-1; i++){
 		x = modProd(x,x,N);

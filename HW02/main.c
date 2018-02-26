@@ -28,15 +28,24 @@ int main (int argc, char **argv) {
 		return 0;  	
   }
 
-  int p;
+  int p = 0;
 
   /* Q2.2: Use isProbablyPrime and randomXbitInt to find a random n-bit prime number */
+		while (isProbablyPrime(p) == 0){
+			p = randXbitInt(n);
+		}
+
 
   printf("p = %u is probably prime.\n", p);
 
   /* Q3.2: Use isProbablyPrime and randomXbitInt to find a new random n-bit prime number 
      which satisfies p=2*q+1 where q is also prime */
-  int q;
+  int q;	//WHAT IS THIS Q VALUE
+
+	while((isProbablyPrime(p) == 0)||(p != 2*q+1)||(isProbablyPrime(q) == 0)){
+		p = randXbitInt(n);
+		q = randXbitInt(n);
+	}
 
 	printf("p = %u is probably prime and equals 2*q + 1. q= %u and is also probably prime.\n", p, q);  
 
