@@ -28,7 +28,7 @@ int main (int argc, char **argv) {
 		return 0;  	
   }
 
-  int p = 0;
+	unsigned int p = 0;
 
   /* Q2.2: Use isProbablyPrime and randomXbitInt to find a random n-bit prime number */
 		while (isProbablyPrime(p) == 0){
@@ -40,11 +40,11 @@ int main (int argc, char **argv) {
 
   /* Q3.2: Use isProbablyPrime and randomXbitInt to find a new random n-bit prime number 
      which satisfies p=2*q+1 where q is also prime */
-  int q;	//WHAT IS THIS Q VALUE
+	unsigned  int q = (p-1)/2;	//WHAT IS THIS Q VALUE
 
-	while((isProbablyPrime(p) == 0)||(p != 2*q+1)||(isProbablyPrime(q) == 0)){
+	while((isProbablyPrime(p) == 0)||(isProbablyPrime(q) == 0)){
 		p = randXbitInt(n);
-		q = randXbitInt(n);
+		q = (p-1)/2;
 	}
 
 	printf("p = %u is probably prime and equals 2*q + 1. q= %u and is also probably prime.\n", p, q);  
@@ -53,6 +53,21 @@ int main (int argc, char **argv) {
 	unsigned int g = findGenerator(p);
 
 	printf("g = %u is a generator of Z_%u \n", g, p);  
+
+	unsigned int x = randXbitInt(n) % p;
+	unsigned int  h = (unsigned int)modExp(g,x,p);
+	unsigned int xfound = 0;
+
+	printf("x = %u, and h = %u\n", x,h);  
+
+	for (int i = 1; i < p; i++){
+		if(modExp(g,i,p) ==h){
+		xfound = i;
+		break;
+		}
+	}
+
+	printf("the x found is %u\n", xfound);
 
   return 0;
 }
