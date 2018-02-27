@@ -58,7 +58,7 @@ int main (int argc, char **argv) {
 	unsigned int  h = (unsigned int)modExp(g,x,p);
 	unsigned int xfound = 0;
 
-	printf("x = %u, and h = %u\n", x,h);  
+	printf("The x value given: %u\n", x);  
 
 	for (int i = 1; i < p; i++){
 		if(modExp(g,i,p) ==h){
@@ -67,7 +67,7 @@ int main (int argc, char **argv) {
 		}
 	}
 
-	printf("the x found is %u\n", xfound);
+	printf("The x value found: %u\n", xfound);
 
   return 0;
 }
