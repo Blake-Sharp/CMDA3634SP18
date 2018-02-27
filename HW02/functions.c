@@ -118,7 +118,7 @@ unsigned int findGenerator(unsigned int p) {
 	unsigned int q = (p-1)/2;
 
 	for(unsigned int j = 2; j < p; j++){
-        	if(((int)pow(j,2) % p == 1)||((int)pow(j,q) % p==1)){ // this is not a generator, next number please
+        	if(((int)modExp(j,2,p) == 1)||((int)modExp(j,q,p)==1)){ // this is not a generator, next number please
                         continue;
          	}
 		
