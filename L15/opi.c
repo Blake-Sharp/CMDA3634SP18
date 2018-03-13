@@ -24,12 +24,12 @@ double start = omp_get_wtime();
   srand48_r(seed, drandData+rank);
 }
   long long int Ntrials = 10000000;
-
+ int rank = omp_get_thread_num();
 
   //need running tallies
   long long int Ntotal=0;
   long long int Ncircle=0;
-#pragma omp parallel reduction(+:Ncircle)
+#pragma omp parallel reduction(+:Ncircle, Ntotal)
 {
 #pragma omp for
   for (long long int n=0; n<Ntrials; n++) {
@@ -37,8 +37,8 @@ double start = omp_get_wtime();
     double rand2;
 
     //gererate two random numbers (use the thread id to offset drandData)
-    drand48_r(drandData+0, &rand1);
-    drand48_r(drandData+0, &rand2);
+    drand48_r(drandData+rank, &rand1);
+    drand48_r(drandData+rank, &rand2);
     
     double x = -1 + 2*rand1; //shift to [-1,1]
     double y = -1 + 2*rand2;
