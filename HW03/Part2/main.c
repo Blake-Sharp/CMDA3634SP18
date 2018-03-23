@@ -25,6 +25,12 @@ int main (int argc, char **argv) {
 
   /* Q3.1 Make rank 0 setup the ELGamal system and
     broadcast the public key information */
+
+  //declare storage for an ElGamal cryptosytem
+  unsigned int p, g, h, x;
+
+	if(rank==0){	
+
   printf("Enter a number of bits: "); fflush(stdout);
   char status = scanf("%u",&n);
 
@@ -35,12 +41,9 @@ int main (int argc, char **argv) {
   }
   printf("\n");
 
-  //declare storage for an ElGamal cryptosytem
-  unsigned int p, g, h, x;
-
   //setup an ElGamal cryptosystem
   setupElGamal(n,&p,&g,&h,&x);
-
+}
 
 
   //Suppose we don't know the secret key. Use all the ranks to try and find it in parallel
