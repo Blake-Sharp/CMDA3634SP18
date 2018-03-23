@@ -31,26 +31,49 @@ int main (int argc, char **argv) {
 
 
   /* Q1.2 alter so only Alice performs the ElGamal setup */
-  printf("Enter a number of bits: "); fflush(stdout);
-  char status = scanf("%u",&n);
+	//declare storage for an ElGamal cryptosystem
+  unsigned int p, g, h, x;
+	if(rank==0){
 
+  printf("Alice enter a number of bits: "); fflush(stdout);
+  char status = scanf("%u",&n);
   //make sure the input makes sense
   if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
     printf("Unsupported bit size.\n");
     return 0;   
   }
-  printf("\n");
 
-  
-  //declare storage for an ElGamal cryptosytem
-  unsigned int p, g, h, x;
+  printf("\n");
 
   //setup an ElGamal cryptosystem
   setupElGamal(n,&p,&g,&h,&x);
-
+}
 
   /* Q1.3 Share the public key information */
-  
+	
+	int Alice = 0; //Alice in our case  
+	
+	unsigned int buf[3];
+
+	if(rank == Alice){
+		buf[0] = p;
+		buf[1] = g;
+		buf[2] = h;
+	}
+
+		MPI_Bcast(&buf,
+			3, //int count
+			MPI_UNSIGNED ,
+			Alice,
+			MPI_COMM_WORLD);
+
+	
+
+	if(rank != Alice){
+		p = buf[0];
+		g = buf[1];
+		h = buf[2];
+	}
 
   //make an array of messages to send/recv
   unsigned int Nmessages = 5;
@@ -63,7 +86,14 @@ int main (int argc, char **argv) {
   unsigned int *a = 
       (unsigned int *) malloc(Nmessages*sizeof(unsigned int)); 
 
-  //fill the messages with random elements of Z_p
+  /* Q2.3 Have only Bob populate messages and then
+    send all the encrypted mesages to Alice (rank 0) */
+
+	int Bob =1;
+
+	if (rank == Bob){
+
+	 //fill the messages with random elements of Z_p
   printf("Bob's original messages are:    [ ");
   for (unsigned int i=0;i<Nmessages;i++) {
     message[i] = randXbitInt(32)%p;
@@ -79,11 +109,45 @@ int main (int argc, char **argv) {
   }
   printf("]\n");
 
-  /* Q2.3 Have only Bob populate messages and then
-    send all the encrypted mesages to Alice (rank 0) */
+
+	MPI_Send(message,
+			5,
+			MPI_UNSIGNED,
+			0,
+			1,
+			MPI_COMM_WORLD);	
+
+	MPI_Send(a,
+			5,
+			MPI_UNSIGNED,
+			0,
+			2,
+			MPI_COMM_WORLD);
+}
 
   /* Q2.3 Have Alice recv all the encrypted mesages 
     from Bob (rank 1) and then decrypt them */
+
+	if(rank == 0){
+
+	MPI_Status mStatus;
+	MPI_Status aStatus;
+	
+	MPI_Recv(message,
+			5,
+			MPI_UNSIGNED,
+			1,
+			1,
+			MPI_COMM_WORLD,
+			&mStatus);
+
+	MPI_Recv(a,
+			5,
+			MPI_UNSIGNED,
+			1,
+			2,
+			MPI_COMM_WORLD,
+			&aStatus);
 
   printf("Alice's recieved messages are:  [ ");
   for (unsigned int i=0;i<Nmessages;i++) {
@@ -99,7 +163,7 @@ int main (int argc, char **argv) {
   }
   printf("]\n");
   printf("\n");
-
+}
   MPI_Finalize();
 
   return 0;
