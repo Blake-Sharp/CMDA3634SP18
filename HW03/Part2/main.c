@@ -45,6 +45,31 @@ int main (int argc, char **argv) {
   setupElGamal(n,&p,&g,&h,&x);
 }
 
+        int Alice = 0; //Alice in our case  
+
+        unsigned int buf[3];
+
+        if(rank == Alice){
+                buf[0] = p;
+                buf[1] = g;
+                buf[2] = h;
+        }
+
+                MPI_Bcast(&buf,
+                        3, //int count
+                        MPI_UNSIGNED ,
+                        Alice,
+                        MPI_COMM_WORLD);
+
+
+
+        if(rank != Alice){
+                p = buf[0];
+                g = buf[1];
+                h = buf[2];
+        }
+
+
 
   //Suppose we don't know the secret key. Use all the ranks to try and find it in parallel
   if (rank==0)
@@ -52,18 +77,42 @@ int main (int argc, char **argv) {
 
   /*Q3.2 We want to loop through values i=0 .. p-2
      determine start and end values so this loop is 
-     distributed amounst the MPI ranks  */
+     distributed amongst the MPI ranks  */
   unsigned int N = p-1; //total loop size
   unsigned int start, end;
   
-  start = 0; 
-  end = start + N;
+  //start = 0; 
+  //end = start + N;
 
+if((N%size)==0){
+	start = (N/size)*rank;
+	end = start + (N/size);
+}
+
+else if(rank < (size-1)){
+	int step = (N/size) + 1;
+	start = step*rank;
+	end = start + step;
+}
+else if(rank == (size -1)){
+	int step = (N/size)+1;
+	start = step*rank;
+	end = N;
+}
+
+double startTime,endTime;
+
+startTime = MPI_Wtime();
+ 
   //loop through the values from 'start' to 'end'
   for (unsigned int i=start;i<end;i++) {
-    if (modExp(g,i+1,p)==h)
+    if (modExp(g,i,p)==h)
       printf("Secret key found! x = %u \n", i);
-  }
+  
+}
+	endTime = MPI_Wtime();
+
+	printf("Time taken for rank %d was %f.\n",rank,(endTime-startTime)); 
 
   MPI_Finalize();
 
