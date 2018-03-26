@@ -113,6 +113,7 @@ startTime = MPI_Wtime();
 	endTime = MPI_Wtime();
 
 	printf("Time taken for rank %d was %f.\n",rank,(endTime-startTime)); 
+	printf("The throughput for rank %d was %f.\n",rank,(N-start)/(endTime-startTime));
 
   MPI_Finalize();
 

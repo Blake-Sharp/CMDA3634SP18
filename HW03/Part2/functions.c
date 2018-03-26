@@ -125,9 +125,10 @@ void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g,
   /* Setup an ElGamal cryptographic system */
  
 	unsigned int prime = randXbitInt(n);
-
-         while(!isProbablyPrime(prime)){
+	unsigned int q = (prime-1)/2;
+         while((isProbablyPrime(prime) ==0)||(isProbablyPrime(q)==0)){
                 prime = randXbitInt(n);
+		q = (prime-1)/2;
         }
 
         *p = prime;
