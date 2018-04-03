@@ -63,7 +63,7 @@ __device__ int testpoint(complex_t c){
 // record the  iteration counts in the count array
 
 // Q2c: transform this function into a CUDA kernel
-__global__ void kernelMandelbrot(int Nre, int Nim, complex_t cmin, complex_t cmax, float *count){ 
+__global__ void kernelMandelbrot(int Nre, int Nim, complex_t cmin, complex_t cmax, float *d_count){ 
   //int n,m;
 
   complex_t c;
