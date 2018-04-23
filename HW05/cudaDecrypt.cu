@@ -47,20 +47,20 @@ __device__ int modExpcu(unsigned int a, unsigned int b, unsigned int p){
 //}
 
 
-__global__ void findKey(unsigned int g, unsigned int h, unsigned int *d_x, unsigned int p){ 
+__global__ void findKey(unsigned int g, unsigned int h,unsigned int *d_x unsigned int p){ 
 
 	int threadid =threadIdx.x;
 	int blockid = blockIdx.x;
 	int Nblock = blockDim.x;
 
 
-	int id = threadid + blockid*Nblock;
+	unsigned int id = threadid + blockid*Nblock;
 	
  
 	if (id < (p-1)) {
-      		if (modExpcu(g,i+1,p)==h) {
-        		printf("Secret key found! x = %u \n", i+1);
-        		d_x=i+1;
+      		if (modExpcu(g,id+1,p)==h) {
+        		printf("Secret key found! x = %u \n", id+1);
+        		d_x=id+1;
 		}
 	}
 }
@@ -104,7 +104,7 @@ for(unsigned int i = 0; i < Nints; i++){
 fclose(efile);
 
 
-unsigned int *h_x;
+unsigned int h_x;
 
 //	h_g = (unsigned int *) malloc(sizeof(unsigned int));
 //	h_h = (unsigned int *) malloc(sizeof(unsigned int));
@@ -123,13 +123,13 @@ unsigned int *d_x;
 	cudaMalloc(&d_x,sizeof(unsigned int));
 //	cudaMalloc(&d_p,sizeof(unsigned int));
 
-//	cudeMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
-//	cudeMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
-	cudeMemcpy(d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice)
-//	cudeMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
+//	cudaMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
+//	cudaMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
+	cudaMemcpy(*d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice);
+//	cudaMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
 
   // find the secret key
-  if (x==0 || modExp(g,x,p)!=h) {
+  if (x==0 || modExp(g,x,p)!=h){
     printf("Finding the secret key...\n");
 	}
     double startTime = clock();
@@ -143,10 +143,10 @@ unsigned int *d_x;
 unsigned int Nthreads = 32;
 unsigned int Nblocks = ((p-1)+Nthreads-1)/Nthreads;
 
-findKey <<<Nblocks,Nthreads>>>(g,h,d_x,p);
-cudeDeviceSynchronize();
+findKey <<<Nblocks,Nthreads>>>(g,h,*d_x,p);
+cudaDeviceSynchronize();
 
-cudaMemcpy(h_x,d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
+cudaMemcpy(h_x,*d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
 
     double endTime = clock();
 
