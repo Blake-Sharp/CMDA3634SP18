@@ -58,9 +58,9 @@ __global__ void findKey(unsigned int g, unsigned int h, unsigned int *d_x, unsig
 	
  
 	if (id < (p-1)) {
-      		if (modExpcu(g,i+1,p)==h) {
-        		printf("Secret key found! x = %u \n", i+1);
-        		d_x=i+1;
+      		if (modExpcu(g,id+1,p)==h) {
+        		printf("Secret key found! x = %u \n", id+1);
+        		d_x=id+1;
 		}
 	}
 }
@@ -125,7 +125,7 @@ unsigned int *d_x;
 
 //	cudeMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
 //	cudeMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
-	cudeMemcpy(d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice)
+	cudaMemcpy(d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice);
 //	cudeMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
 
   // find the secret key
