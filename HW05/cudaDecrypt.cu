@@ -47,15 +47,18 @@ __device__ int modExpcu(unsigned int a, unsigned int b, unsigned int p){
 //}
 
 
-__global__ void findKey(unsigned int p, unsigned int h, unsigned int g, unsigned int x){ 
+__global__ void findKey(unsigned int g, unsigned int h, unsigned int *d_x, unsigned int p){ 
 
 	int threadid =threadIdx.x;
 	int blockid = blockIdx.x;
 	int Nblock = blockDim.x;
 
+
 	int id = threadid + blockid*Nblock;
- 	for (unsigned int i=0;i<(d_p-1);i++) {
-      		if (modExp(d_g,i+1,d_p)==h) {
+	
+ 
+	if (id < (p-1)) {
+      		if (modExpcu(g,i+1,p)==h) {
         		printf("Secret key found! x = %u \n", i+1);
         		d_x=i+1;
 		}
@@ -101,29 +104,29 @@ for(unsigned int i = 0; i < Nints; i++){
 fclose(efile);
 
 
-unsigned int *h_g,*h_h,*h_p,*h_x;
+unsigned int *h_x;
 
-	h_g = (unsigned int *) malloc(sizeof(unsigned int));
-	h_h = (unsigned int *) malloc(sizeof(unsigned int));
+//	h_g = (unsigned int *) malloc(sizeof(unsigned int));
+//	h_h = (unsigned int *) malloc(sizeof(unsigned int));
 	h_x = (unsigned int *) malloc(sizeof(unsigned int));
-	h_p = (unsigned int *) malloc(sizeof(unsigned int));
+//	h_p = (unsigned int *) malloc(sizeof(unsigned int));
 
-	h_g = g;
-	h_h = h;
+//	h_g = g;
+//	h_h = h;
 	h_x = 0;
-	h_p = p;
+//	h_p = p;
 
-unsigned int *d_g,*d_h,*d_x,*d_p;
+unsigned int *d_x;
 
-	cudaMalloc(&d_g,sizeof(unsigned int));
-	cudaMalloc(&d_h,sizeof(unsigned int));
+//	cudaMalloc(&d_g,sizeof(unsigned int));
+//	cudaMalloc(&d_h,sizeof(unsigned int));
 	cudaMalloc(&d_x,sizeof(unsigned int));
-	cudaMalloc(&d_p,sizeof(unsigned int));
+//	cudaMalloc(&d_p,sizeof(unsigned int));
 
-	cudeMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
-	cudeMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
+//	cudeMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
+//	cudeMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
 	cudeMemcpy(d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice)
-	cudeMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
+//	cudeMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
 
   // find the secret key
   if (x==0 || modExp(g,x,p)!=h) {
@@ -140,7 +143,7 @@ unsigned int *d_g,*d_h,*d_x,*d_p;
 unsigned int Nthreads = 32;
 unsigned int Nblocks = ((p-1)+Nthreads-1)/Nthreads;
 
-findKey <<<Nblocks,Nthreads>>>(d_g,d_h,d_x,d_p);
+findKey <<<Nblocks,Nthreads>>>(g,h,d_x,p);
 cudeDeviceSynchronize();
 
 cudaMemcpy(h_x,d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
@@ -155,15 +158,15 @@ cudaMemcpy(h_x,d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
 	printf("It took %d seconds to find the key in cuda.\n", totalTime);
 	printf("The work was %d and the throughput was %d.\n",work,throughput);
 
-cudaFree(d_g);
-cudaFree(d_p);
-cudaFree(d_h);
+//cudaFree(d_g);
+//cudaFree(d_p);
+//cudaFree(d_h);
 cudaFree(d_x);
 
-free(h_g);
-free(g_h);
+//free(h_g);
+//free(g_h);
 free(h_x);
-free(h_p)
+//free(h_p);
 
 
   /* Part 2. Start this program by first copying the contents of the main function from 
