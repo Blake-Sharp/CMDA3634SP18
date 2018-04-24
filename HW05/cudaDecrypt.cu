@@ -145,9 +145,15 @@ unsigned int *d_x;
 >>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
 
   // find the secret key
+<<<<<<< HEAD
   if (x==0 || modExp(g,x,p)!=h){
     printf("Finding the secret key...\n");
 	}
+=======
+  //if (x==0 || modExp(g,x,p)!=h) {
+    //printf("Finding the secret key...\n");
+//	}
+>>>>>>> 043ba2a664734012364823d7453a549526f335e3
     double startTime = clock();
     //for (unsigned int i=0;i<p-1;i++) {
       //if (modExp(g,i+1,p)==h) {
@@ -199,3 +205,4 @@ cudaFree(d_x);
 
   return 0;
 }
+
