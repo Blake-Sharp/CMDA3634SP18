@@ -129,9 +129,9 @@ unsigned int *d_x;
 //	cudeMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
 
   // find the secret key
-  if (x==0 || modExp(g,x,p)!=h) {
-    printf("Finding the secret key...\n");
-	}
+  //if (x==0 || modExp(g,x,p)!=h) {
+    //printf("Finding the secret key...\n");
+//	}
     double startTime = clock();
     //for (unsigned int i=0;i<p-1;i++) {
       //if (modExp(g,i+1,p)==h) {
@@ -176,3 +176,4 @@ cudaFree(d_x);
 
   return 0;
 }
+
