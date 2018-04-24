@@ -47,7 +47,7 @@ __device__ int modExpcu(unsigned int a, unsigned int b, unsigned int p){
 //}
 
 
-__global__ void findKey(unsigned int g, unsigned int h, unsigned int *d_x, unsigned int p){ 
+__global__ void findKey(unsigned int g, unsigned int h, unsigned int p, unsigned int *d_x){ 
 
 	int threadid =threadIdx.x;
 	int blockid = blockIdx.x;
@@ -59,8 +59,8 @@ __global__ void findKey(unsigned int g, unsigned int h, unsigned int *d_x, unsig
  
 	if (id < (p-1)) {
       		if (modExpcu(g,id+1,p)==h) {
-        		printf("Secret key found! x = %u \n", id+1);
-        		d_x=id+1;
+        		//printf("Secret key found! x = %u \n", id+1);
+        		*d_x =id+1;
 		}
 	}
 }
@@ -104,11 +104,11 @@ for(unsigned int i = 0; i < Nints; i++){
 fclose(efile);
 
 
-unsigned int *h_x;
+unsigned int h_x;
 
 //	h_g = (unsigned int *) malloc(sizeof(unsigned int));
 //	h_h = (unsigned int *) malloc(sizeof(unsigned int));
-	h_x = (unsigned int *) malloc(sizeof(unsigned int));
+//	h_x = (unsigned int *) malloc(sizeof(unsigned int));
 //	h_p = (unsigned int *) malloc(sizeof(unsigned int));
 
 //	h_g = g;
@@ -125,7 +125,7 @@ unsigned int *d_x;
 
 //	cudeMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
 //	cudeMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
-	cudaMemcpy(d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice);
+//	cudaMemcpy(d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice);
 //	cudeMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
 
   // find the secret key
@@ -141,12 +141,12 @@ unsigned int *d_x;
 	//}
 
 unsigned int Nthreads = 32;
-unsigned int Nblocks = ((p-1)+Nthreads-1)/Nthreads;
+unsigned int Nblocks = (p-1)/Nthreads;
 
-findKey <<<Nblocks,Nthreads>>>(g,h,d_x,p);
+findKey <<<Nblocks,Nthreads>>>(g,h,p,d_x);
 cudeDeviceSynchronize();
 
-cudaMemcpy(h_x,d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
+cudaMemcpy(&h_x,d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
 
     double endTime = clock();
 
@@ -165,7 +165,7 @@ cudaFree(d_x);
 
 //free(h_g);
 //free(g_h);
-free(h_x);
+//free(h_x);
 //free(h_p);
 
 
