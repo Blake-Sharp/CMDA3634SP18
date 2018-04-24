@@ -47,11 +47,11 @@ __device__ int modExpcu(unsigned int a, unsigned int b, unsigned int p){
 //}
 
 
-<<<<<<< HEAD
-__global__ void findKey(unsigned int g, unsigned int h,unsigned int *d_x unsigned int p){ 
-=======
+//<<<<<<< HEAD
+// __global__ void findKey(unsigned int g, unsigned int h,unsigned int *d_x unsigned int p){ 
+//=======
 __global__ void findKey(unsigned int g, unsigned int h, unsigned int p, unsigned int *d_x){ 
->>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
+//>>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
 
 	int threadid =threadIdx.x;
 	int blockid = blockIdx.x;
@@ -63,13 +63,13 @@ __global__ void findKey(unsigned int g, unsigned int h, unsigned int p, unsigned
  
 	if (id < (p-1)) {
       		if (modExpcu(g,id+1,p)==h) {
-<<<<<<< HEAD
-        		printf("Secret key found! x = %u \n", id+1);
-        		d_x=id+1;
-=======
+//<<<<<<< HEAD
+//        		printf("Secret key found! x = %u \n", id+1);
+//        		d_x=id+1;
+//=======
         		//printf("Secret key found! x = %u \n", id+1);
         		*d_x =id+1;
->>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
+//>>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
 		}
 	}
 }
@@ -94,12 +94,12 @@ int main (int argc, char **argv) {
     and the cyphertexts from messages.txt. */
 
 	FILE *file;
-	file = fopen("public_key.txt","r");
+	file = fopen("bonus_public_key.txt","r");
 	fscanf(file, "%u %u %u %u", &n,&p,&g,&h);
 	fclose(file);
 
 FILE *efile;
-efile = fopen("message.txt","r");
+efile = fopen("bonus_message.txt","r");
 fscanf(efile,"%u",&Nints);
 
   unsigned int *Zmessage =
@@ -132,28 +132,28 @@ unsigned int *d_x;
 	cudaMalloc(&d_x,sizeof(unsigned int));
 //	cudaMalloc(&d_p,sizeof(unsigned int));
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //	cudaMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
 //	cudaMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
-	cudaMemcpy(*d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice);
+//	cudaMemcpy(*d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice);
 //	cudaMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
-=======
+//=======
 //	cudeMemcpy(d_g,h_g,sizeof(unsigned int),cudaMemcpyHostToDevice)
 //	cudeMemcpy(d_h,h_h,sizeof(unsigned int),cudaMemcpyHostToDevice)
 //	cudaMemcpy(d_x,h_x,sizeof(unsigned int),cudaMemcpyHostToDevice);
 //	cudeMemcpy(d_p,h_p,sizeof(unsigned int),cudaMemcpyHostToDevice)
->>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
+//>>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
 
   // find the secret key
-<<<<<<< HEAD
+//<<<<<<< HEAD
   if (x==0 || modExp(g,x,p)!=h){
     printf("Finding the secret key...\n");
 	}
-=======
+//=======
   //if (x==0 || modExp(g,x,p)!=h) {
     //printf("Finding the secret key...\n");
 //	}
->>>>>>> 043ba2a664734012364823d7453a549526f335e3
+//>>>>>>> 043ba2a664734012364823d7453a549526f335e3
     double startTime = clock();
     //for (unsigned int i=0;i<p-1;i++) {
       //if (modExp(g,i+1,p)==h) {
@@ -165,17 +165,17 @@ unsigned int *d_x;
 unsigned int Nthreads = 32;
 unsigned int Nblocks = (p-1)/Nthreads;
 
-<<<<<<< HEAD
-findKey <<<Nblocks,Nthreads>>>(g,h,*d_x,p);
+//<<<<<<< HEAD
+//findKey <<<Nblocks,Nthreads>>>(g,h,*d_x,p);
+//cudaDeviceSynchronize();
+
+//cudaMemcpy(h_x,*d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
+//=======
+findKey <<<Nblocks,Nthreads>>>(g,h,p,d_x);
 cudaDeviceSynchronize();
 
-cudaMemcpy(h_x,*d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
-=======
-findKey <<<Nblocks,Nthreads>>>(g,h,p,d_x);
-cudeDeviceSynchronize();
-
 cudaMemcpy(&h_x,d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
->>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
+//>>>>>>> 080b1748334d1d58f0c74e8f5a99719d01a148fc
 
     double endTime = clock();
 
