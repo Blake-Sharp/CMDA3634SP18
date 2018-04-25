@@ -158,6 +158,16 @@ cudaMemcpy(&h_x,d_x,sizeof(unsigned int),cudaMemcpyDeviceToHost);
 	printf("It took %d seconds to find the key in cuda.\n", totalTime);
 	printf("The work was %d and the throughput was %d.\n",work,throughput);
 
+int Nchars = ((n-1/8)/Nints);
+unsigned char *message = (unsigned char *) malloc((Nchars+1)*sizeof(unsigned char));
+
+ElGamalDecrypt(Zmessage,a,Nints,p,x);
+convertZtoString(Zmessage,Nints,message,Nchars);
+
+printf("Decrypted Message = \"%s\"\n",message;
+
+
+
 //cudaFree(d_g);
 //cudaFree(d_p);
 //cudaFree(d_h);
